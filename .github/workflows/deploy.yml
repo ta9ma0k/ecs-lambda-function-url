@@ -20,7 +20,7 @@ jobs:
         id: build
         with:
           ecr-repository-uri: ${{ vars.ECR_REPOSITORY_URI }}
-          dockerfile-path: docker/copilot/Dockerfile
+          dockerfile-path: ./docker/copilot/Dockerfile
       - uses: ./.github/actions/container-deploy/      # コンテナのデプロイ
         with:
           ecs-cluster: ${{ vars.ECS_CLUSTER_NAME }}
