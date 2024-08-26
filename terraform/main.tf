@@ -22,3 +22,7 @@ module "iam_policy_copilot_deploy_attachment" {
   copilot_app_name = "ecs-lambda-sample"
   copilot_envs     = ["test"]
 }
+
+output "role_name" {
+  value = module.iam_role_api_deploy_github_oidc.name 
+}
