@@ -1,0 +1,34 @@
+version: "3"
+
+x-app: &app
+  build:
+    context: .
+    dockerfile: ./docker/local/Dockerfile
+  tmpfs:
+    - /tmp
+    - /app/tmp/pids
+
+x-backend: &backend
+  <<: *app
+  stdin_open: true
+  tty: true
+  volumes:
+    - ./api:/app:cached
+    - rails_cache:/app/tmp/cache
+    - bundle:/usr/local/bundle
+  environment:
+    RAILS_LOG_TO_STDOUT: 1
+    RAILS_ENV: ${RAILS_ENV:-development}
+
+services:
+  api:
+    <<: *backend
+    container_name: ecs-lambda-api-server
+    command: bundle exec rails server -b 0.0.0.0
+    ports:
+      - "${RAILS_PORT:-3010}:3000"
+
+volumes:
+  rails-api-data:
+  rails_cache:
+  bundle:

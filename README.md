@@ -16,7 +16,8 @@ Gemfileを編集する。(./Gemfileを参照)
 #### rails new
 
 ```sh
-bundle exec rails new api  --skip-bundle --skip-test --database=mysql
+bundle
+bundle exec rails new api --skip-bundle --skip-test
 cd api
 rm -rf .git
 ```
@@ -47,14 +48,10 @@ docker compose run api bundle
 
 - api
     - apiサーバ用コンテナ
-- db
-    - データベース用コンテナ
-    - Mysql8.0
 
 ### setup
 
 ```
 docker compose build
-docker compose run api rails db:prepare
 docker compose up
 ```
