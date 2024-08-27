@@ -19,6 +19,9 @@ x-backend: &backend
   environment:
     RAILS_LOG_TO_STDOUT: 1
     RAILS_ENV: ${RAILS_ENV:-development}
+    AWS_ACCESS_KEY_ID: "test"
+    AWS_SECRET_ACCESS_KEY: "test"
+    AWS_REGION: ap-northeast-1
 
 services:
   api:
@@ -27,6 +30,21 @@ services:
     command: bundle exec rails server -b 0.0.0.0
     ports:
       - "${RAILS_PORT:-3010}:3000"
+
+  localstack:
+    container_name: "${LOCALSTACK_DOCKER_NAME-localstack}"
+    image: localstack/localstack
+    ports:
+      - 4566
+      - "${LOCALSTACK_PORT:-3566}:4566"
+    environment:
+      - SERVICES=lambda
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=ap-northeast-1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
 
 volumes:
   rails-api-data:
