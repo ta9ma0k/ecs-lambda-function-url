@@ -36,7 +36,7 @@ class Invoker
       Aws::Sigv4::Signer.new(
         service: 'lambda',
         region: 'ap-northeast-1',
-        credentials: Aws::ECSCredentials.new(retries: 3)
+        credentials_provider: Aws::ECSCredentials.new(retries: 3)
       )
     # end
   end
