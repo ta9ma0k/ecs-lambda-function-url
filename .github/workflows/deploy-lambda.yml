@@ -1,0 +1,28 @@
+name: Deploy Lambda
+on: workflow_dispatch
+env:
+  ROLE_ARN: arn:aws:iam::${{ secrets.AWS_ID }}:role/${{ secrets.ROLE_NAME }}
+  SESSION_NAME: gh-oidc-${{ github.run_id }}-${{ github.run_attempt }}
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.ROLE_ARN }}
+          role-session-name: ${{ env.SESSION_NAME }}
+          aws-region: ap-northeast-1
+      - uses: actions/setup-python@v3
+        with:
+          python-version: '3.12'
+      - name: build
+        run: |
+          cd functions
+          make zip
+          aws lambda update-function-code --function-name "${FUNCTION_NAME}" --zip-file "fileb://lambda.zip" --publish
+        env:
+          FUNCTION_NAME: http-test-function
