@@ -52,18 +52,9 @@ resource "aws_lambda_function" "my_lambda_function" {
   filename      = "../functions/lambda.zip"
 }
 
-resource "aws_lambda_function_url" "my_lambda_function_url" {
-  function_name = aws_lambda_function.my_lambda_function.function_name
-  authorization_type = "AWS_IAM"
-}
-
 resource "aws_cloudwatch_log_group" "lambda_log_group" {
   name = "/aws/lambda/${aws_lambda_function.my_lambda_function.function_name}"
   retention_in_days = 7
-}
-
-output "function_url" {
-  value = aws_lambda_function_url.my_lambda_function_url.function_url
 }
 
 output "role_name" {
