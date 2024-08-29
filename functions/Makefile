@@ -13,28 +13,22 @@ zip:clean
 delete:
 	aws --endpoint-url=http://localhost:3566 \
     --region ap-northeast-1 --profile localstack lambda delete-function \
-    --function-name=pipenv-lambda
+    --function-name=http-test-function 
 
 create:zip
 	aws lambda create-function \
-    --function-name=pipenv-lambda \
+    --function-name=http-test-function \
     --runtime=python3.12 \
 		--role=arn:aws:iam::000000000000:role/test \
     --handler=handler.main \
     --zip-file fileb://lambda.zip \
 		--region ap-northeast-1 \
     --endpoint-url=http://localhost:3566 \
-		--profile localstack > /dev/null
-	aws lambda create-function-url-config \
-    --function-name pipenv-lambda \
-    --auth-type NONE \
-		--region ap-northeast-1 \
-    --endpoint-url=http://localhost:3566 \
-		--profile localstack 
+		--profile localstack
 
 update:zip
 	aws lambda update-function-code \
-    --function-name=pipenv-lambda \
+    --function-name=http-test-function  \
     --zip-file fileb://lambda.zip \
 		--region ap-northeast-1 \
     --endpoint-url=http://localhost:3566 \
@@ -43,7 +37,7 @@ update:zip
 invoke:
 	aws lambda invoke \
 		--endpoint-url=http://localhost:3566 \
-		--function-name=pipenv-lambda \
+		--function-name=http-test-function  \
 		--region ap-northeast-1 \
 		--payload '{}' \
 		--cli-binary-format raw-in-base64-out \
